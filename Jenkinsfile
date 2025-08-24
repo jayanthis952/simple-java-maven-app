@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     tools {
-        maven 'Maven3'   // must match the name in Jenkins Global Tool Config
-        jdk 'JDK17'      // use JDK17 instead of JDK11
+        maven 'Maven3'   // Must match the Maven installation name in Jenkins
+        jdk 'JDK17'      // Must match the JDK installation name in Jenkins
     }
 
     stages {
@@ -15,14 +15,15 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh './mvnw clean package -B'
+                // Use global Maven, not mvnw
+                sh 'mvn clean package -B'
             }
         }
 
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('SonarQube') {
-                    sh './mvnw sonar:sonar -B'
+                    sh 'mvn sonar:sonar -B'
                 }
             }
         }
