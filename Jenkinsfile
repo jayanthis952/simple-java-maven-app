@@ -1,10 +1,11 @@
 pipeline {
     agent any
 
-    tools {
-        maven 'Maven3'   // Must match the Maven installation name in Jenkins
-        jdk 'JDK17'      // Must match the JDK installation name in Jenkins
-    }
+   tools {
+    maven 'Maven3'   // Must match Jenkins Maven config
+    jdk 'JDK21'      // Update this to JDK21
+}
+
 
     stages {
         stage('Checkout') {
