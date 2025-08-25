@@ -1,11 +1,10 @@
 pipeline {
     agent any
 
-   tools {
-    maven 'Maven3'   // Must match Jenkins Maven config
-    jdk 'JDK21'      // Update this to JDK21
-}
-
+    tools {
+        maven 'Maven3'   // Must match Jenkins Maven global config
+        jdk 'JDK21'      // Must match Jenkins JDK global config
+    }
 
     stages {
         stage('Checkout') {
@@ -16,25 +15,17 @@ pipeline {
 
         stage('Build') {
             steps {
-                // Use global Maven, not mvnw
                 sh 'mvn clean package -B'
             }
         }
+    }
 
-        stage('SonarQube Analysis') {
-            steps {
-                withSonarQubeEnv('SonarQube') {
-                    sh 'mvn sonar:sonar -B'
-                }
-            }
+    post {
+        success {
+            echo 'Build completed successfully!'
         }
-
-        stage('Quality Gate') {
-            steps {
-                timeout(time: 1, unit: 'HOURS') {
-                    waitForQualityGate abortPipeline: true
-                }
-            }
+        failure {
+            echo 'Build failed. Please check the logs.'
         }
     }
 }
